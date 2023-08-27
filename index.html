@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weather App</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+</head>
+
+<body>
+
+  <div class="card">
+    <div class="search-field">
+      <input type="text" , placeholder="Name of your city" spellcheck="false" />
+      <button><img src="images/search.jpg" alt="" /></button>
+    </div>
+    <div class="weather-details">
+      <div class="place">
+        <img src="https://openweathermap.org/img/wn/10d@2x.png" alt="" class="weatherIcon" />
+        <h1 class="temperature">28°C</h1>
+        <h2 class="city">Assam</h2>
+      </div>
+      <div class="details">
+        <div class="col">
+          <img src="images/humidity.png" alt="" />
+          <div>
+            <p class="humidity">86%</p>
+            <p>Humidity</p>
+          </div>
+        </div>
+        <div class="col">
+          <img src="images/pressure-512.png" alt="" />
+          <div>
+            <p class="pressure">1006 Pa</p>
+            <p>Pressure</p>
+          </div>
+        </div>
+        <div class="col">
+          <img src="images/wind.png" alt="" />
+          <div>
+            <p class="wind-speed">1.8 KM/H</p>
+            <p>Wind Speed</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // BACKGROUND GRADIENT ANIMATION LOGIC
+    // var colors = new Array(
+    //   [62, 35, 255],
+    //   [60, 255, 60],
+    //   [255, 35, 98],
+    //   [45, 175, 230],
+    //   [255, 0, 255],
+    //   [255, 128, 0]
+    // );
+
+    // var step = 0;
+    // var colorIndices = [0, 1, 2, 3];
+
+    // //TRANSITION SPEED
+    // var gradientSpeed = 0.002;
+
+    // function updateGradient() {
+    //   if ($ === undefined) return;
+
+    //   var c0_0 = colors[colorIndices[0]];
+    //   var c0_1 = colors[colorIndices[1]];
+    //   var c1_0 = colors[colorIndices[2]];
+    //   var c1_1 = colors[colorIndices[3]];
+
+    //   var istep = 1 - step;
+    //   var r1 = Math.round(istep * c0_0[0] + step * c0_1[0]);
+    //   var g1 = Math.round(istep * c0_0[1] + step * c0_1[1]);
+    //   var b1 = Math.round(istep * c0_0[2] + step * c0_1[2]);
+    //   var color1 = "rgb(" + r1 + "," + g1 + "," + b1 + ")";
+
+    //   var r2 = Math.round(istep * c1_0[0] + step * c1_1[0]);
+    //   var g2 = Math.round(istep * c1_0[1] + step * c1_1[1]);
+    //   var b2 = Math.round(istep * c1_0[2] + step * c1_1[2]);
+    //   var color2 = "rgb(" + r2 + "," + g2 + "," + b2 + ")";
+
+    //   $("#gradient")
+    //     .css({
+    //       background:
+    //         "-webkit-gradient(linear, left top, right top, from(" +
+    //         color1 +
+    //         "), to(" +
+    //         color2 +
+    //         "))",
+    //     })
+    //     .css({
+    //       background:
+    //         "-moz-linear-gradient(left, " +
+    //         color1 +
+    //         " 0%, " +
+    //         color2 +
+    //         " 100%)",
+    //     });
+
+    //   step += gradientSpeed;
+    //   if (step >= 1) {
+    //     step %= 1;
+    //     colorIndices[0] = colorIndices[1];
+    //     colorIndices[2] = colorIndices[3];
+
+    //     colorIndices[1] =
+    //       (colorIndices[1] +
+    //         Math.floor(1 + Math.random() * (colors.length - 1))) %
+    //       colors.length;
+    //     colorIndices[3] =
+    //       (colorIndices[3] +
+    //         Math.floor(1 + Math.random() * (colors.length - 1))) %
+    //       colors.length;
+    //   }
+    // }
+
+    // setInterval(updateGradient, 10);
+
+    // API CALLING LOGIC
+    const apiSecret = "YOUR_API_KEY_HERE";
+    const apiUrl =
+      "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+
+    const searchField = document.querySelector(".search-field input");
+    const searchButton = document.querySelector(".search-field button");
+
+    async function getWeatherDetails(city) {
+      const response = await fetch(apiUrl + city + `&appid=${apiSecret}`);
+      var data = await response.json();
+
+      document.querySelector(".city").innerHTML = data["name"];
+      document.querySelector(".temperature").innerHTML =
+        parseInt(data["main"]["temp"]).toString() + " °C";
+      document.querySelector(".humidity").innerHTML =
+        data["main"]["humidity"] + "%";
+      document.querySelector(".pressure").innerHTML =
+        data["main"]["pressure"] + " Pa";
+      document.querySelector(".wind-speed").innerHTML =
+        data["wind"]["speed"] + " KM/H";
+      document.querySelector(
+        ".weatherIcon"
+      ).src = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+
+      document.querySelector(".weather-details").style.display = "flex";
+
+      console.log(data);
+    }
+
+    searchButton.addEventListener("click", () => {
+      getWeatherDetails(searchField.value);
+    });
+  </script>
+</body>
+
+</html>
